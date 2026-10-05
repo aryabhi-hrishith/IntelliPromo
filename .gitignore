@@ -1,0 +1,46 @@
+# Python
+.venv/
+.venv-1/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Secrets
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Pytest
+.pytest_cache/
+
+# Data (large / raw files should not be committed)
+data/raw/*
+data/processed/*
+
+# Trained model artifacts (can be large)
+*.pkl
+*.joblib
+src/models/*.pkl
+src/models/*.joblib
+
+# Reports and generated figures
+reports/figures/*
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+# Large external datasets
+data/external/online_retail_II.xlsx
+data/external/sales_train_evaluation.csv
+data/external/sales_train_validation.csv
+data/external/sell_prices.csv

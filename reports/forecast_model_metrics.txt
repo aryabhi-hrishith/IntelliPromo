@@ -1,0 +1,67 @@
+Step 13: training and evaluating demand forecasts
+Input: data\processed\forecasting_dataset.csv
+Dataset shape: 164,298 rows x 23 columns
+Columns found: ['item_id', 'store_id', 'cat_id', 'dept_id', 'date', 'target_date', 'lag_0', 'lag_1', 'lag_2', 'lag_6', 'lag_13', 'lag_27', 'rolling_mean_7', 'rolling_mean_14', 'rolling_mean_28', 'rolling_std_7', 'target_dayofweek', 'target_month', 'target_is_weekend', 'target_has_event', 'target_snap', 'target_units', 'split']
+Split taken from: 'split' column from Step 12
+Rows dropped for missing values: 0
+
+Features used (15): ['lag_0', 'lag_1', 'lag_2', 'lag_6', 'lag_13', 'lag_27', 'rolling_mean_7', 'rolling_mean_14', 'rolling_mean_28', 'rolling_std_7', 'target_dayofweek', 'target_month', 'target_is_weekend', 'target_has_event', 'target_snap']
+Excluded: identifiers, dates, split flag and the target.
+Train rows: 161,778   Test rows: 2,520
+Train target dates: 2011-02-26 to 2016-03-27
+Test target dates : 2016-03-28 to 2016-04-24
+Series (item x store) in test: 90
+
+Training RandomForestRegressor (this can take a minute)...
+
+============================================================
+TEST-SET RESULTS (same rows for both models; units per day)
+============================================================
+Test rows: 2,520   Mean actual demand: 10.919   Rows with zero sales: 15.1%
+Model                                    MAE      RMSE
+Naive baseline (lag_0)                5.6024    8.9339
+Random Forest                         4.2107    6.1291
+
+Random Forest vs naive: MAE +24.8% , RMSE +31.4% (positive = Random Forest error is lower)
+Verdict: On this test set, Random Forest had lower MAE and lower RMSE than the naive baseline.
+
+Per-category test errors:
+Category        Rows   Naive MAE    RF MAE  Naive RMSE   RF RMSE
+FOODS            840      7.5143    5.0691     11.4072    7.1534
+HOBBIES          840      5.5774    4.3473      9.1343    6.6591
+HOUSEHOLD        840      3.7155    3.2156      5.0877    4.1454
+
+Random Forest feature importances (top 10):
+  rolling_mean_7      0.795
+  lag_0               0.049
+  target_dayofweek    0.031
+  rolling_mean_28     0.027
+  rolling_mean_14     0.026
+  lag_13              0.017
+  lag_6               0.013
+  rolling_std_7       0.012
+  lag_27              0.010
+  target_is_weekend   0.007
+
+Saved predictions: data\processed\forecast_predictions.csv (2,520 rows)
+Saved graph: reports\figures\forecast_comparison.png
+
+============================================================
+HOW TO READ THESE RESULTS
+============================================================
+- MAE: average size of the miss, in units per day. RMSE: similar, but
+  large misses count more, so spikes in demand raise it.
+- The naive baseline copies today's sales. A model is only useful if it
+  beats this simple rule; the verdict above says whether it did here.
+
+LIMITATIONS
+- One-step-ahead (next day) forecasts only; not a multi-week forecast.
+- One test window of 28 days, 90 product-store series, one random seed,
+  no cross-validation and no hyperparameter tuning. A different window
+  could rank the models differently.
+- Many rows have zero sales (intermittent demand), which makes daily
+  errors noisy for any model.
+- Prices, discounts and inventory are not model inputs, so these results
+  say nothing about promotion effects. Feature importance is not causation.
+- Identifiers were excluded, so the model cannot learn item-specific
+  behaviour beyond what recent sales and calendar features reveal.
