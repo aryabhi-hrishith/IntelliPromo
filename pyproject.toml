@@ -1,2 +1,19 @@
+[project]
+name = "intellipromo"
+version = "1.0.0"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pymongo",
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "python-dotenv",
+    "python-multipart",
+    "openpyxl",
+    "google-genai"
+]
+
 [tool.vercel]
 entrypoint = "src.api.main:app"
