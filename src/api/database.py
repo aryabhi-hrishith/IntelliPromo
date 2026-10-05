@@ -5,12 +5,14 @@ Handles reading data, recording campaign decision history, and multi-tenant isol
 """
 
 import math
+import os
 from typing import Optional
 
 from bson import ObjectId
 from pymongo import MongoClient
 
-MONGO_URI = "mongodb://localhost:27017/"
+
+MONGO_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
 DB_NAME = "retail_promotion_planner"
 
 # One client is created when the API starts and reused for every request.
