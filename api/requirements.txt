@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+fastapi
+uvicorn[standard]
+pymongo
+python-dotenv
+google-genai<3.0.0
+openpyxl
+python-multipart
